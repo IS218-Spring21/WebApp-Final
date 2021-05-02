@@ -1,7 +1,8 @@
+'''Routes for Main Page'''
+
 # Python standard libraries
 import json
 import os
-import sqlite3
 
 # Third-party libraries
 from flask import Flask, redirect, request, url_for
@@ -16,44 +17,31 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests
 
 # Internal imports
-from login.db import init_db_command
-from login.user import User
+# from app.login.db import init_db_command
+from ..login.user import User
+# from ...app.app import app
 
-# Flask app setup
-app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
+from flask import Blueprint, render_template
 
-# Naive database setup
-try:
-    init_db_command()
-except sqlite3.OperationalError:
-    # Assume it's already been created
-    pass
+main_page = Blueprint(
+    'main_page',
+    __name__,
+    template_folder='templates',
+    static_folder='static'
+)
 
-
-# User session management setup
-# https://flask-login.readthedocs.io/en/latest
-login_manager = LoginManager()
-login_manager.init_app(app)
-'''
 # Configuration
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
-GOOGLE_DISCOVERY_URL = (
-    "https://accounts.google.com/.well-known/openid-configuration"
-)
+GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
+
+# os.environ.get('GOOGLE_DISCOVERY_URL', None)
 
 # OAuth 2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
-'''
 
-# Flask-Login helper to retrieve a user from our db
-@login_manager.user_loader
-def load_user(user_id):
-    return User.get(user_id)
 
-'''
-@app.route("/")
+@main_page.route("/")
 def index():
     if current_user.is_authenticated:
         return (
@@ -72,7 +60,7 @@ def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
 
 
-@app.route("/login")
+@main_page.route("/login")
 def login():
     # Find out what URL to hit for Google login
     google_provider_cfg = get_google_provider_cfg()
@@ -88,7 +76,7 @@ def login():
     return redirect(request_uri)
 
 
-@app.route("/login/callback")
+@main_page.route("/login/callback")
 def callback():
     # Get authorization code Google sent back to you
     code = request.args.get("code")
@@ -144,34 +132,8 @@ def callback():
     return redirect(url_for("index"))
 
 
-@app.route("/logout")
+@main_page.route("/logout")
 @login_required
 def logout():
     logout_user()
     return redirect(url_for("index"))
-'''
-
-with app.app_context():
-    from main import main_routes
-
-    app.register_blueprint(main_routes.main_page)
-
-
-
-@app.route("/")
-def index():
-    if current_user.is_authenticated:
-        return (
-            "<p>Hello, {}! You're logged in! Email: {}</p>"
-            "<div><p>Google Profile Picture:</p>"
-            '<img src="{}" alt="Google profile pic"></img></div>'
-            '<a class="button" href="/logout">Logout</a>'.format(
-                current_user.name, current_user.email, current_user.profile_pic
-            )
-        )
-    else:
-        return '<a class="button" href="/login">Google Login</a>'
-
-
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
