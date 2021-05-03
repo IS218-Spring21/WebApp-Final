@@ -16,4 +16,6 @@ RUN cd /app \
 
 WORKDIR /app
 
+RUN pylint --load-plugins pylint_flask app
+
 CMD  [ "/start" ]
