@@ -61,7 +61,8 @@ def stream():
 @app.route('/')
 def home():
     """
-    Displays the chatroom. If user isn't logged in it will redirect them to the login page
+    Displays the chatroom. If user isn't logged in it
+    will redirect them to the login page
     """
     if 'user' not in session:
         return redirect('/login')
