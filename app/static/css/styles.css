@@ -6,6 +6,10 @@
     margin-right: auto;
 }
 
+nav .navbar-brand {
+    float: left;
+}
+
 body {
     font-family: 'Sanchez', serif;
     -webkit-align-content: center;
