@@ -23,7 +23,7 @@
         $(document).ready(function (){
             socket = io.connect('http://'+document.domain+":"+location.port+'/chatroom');
             socket.on('connect', function (){
-                socket.emit('join', {});
+                socket.emit('join');
             });
             {# Sends message when user joins #}
             socket.on('status', function (data){
@@ -44,7 +44,7 @@
             });
         });
         function leave_room(){
-                socket.emit('left', {}, function (){
+                socket.emit('left', function (){
                     socket.disconnect();
                     window.location.href = "{{ url_for('index') }}";
                 });

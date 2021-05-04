@@ -1,8 +1,10 @@
+"""
+Chatroom Application using Redis & SocketIO
+"""
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from flask_session import Session
 import redis
-from datetime import timedelta
 
 # https://www.youtube.com/watch?v=q42zgGaYYzE
 
@@ -12,19 +14,25 @@ app.config['SECRET_KEY'] = 'secret'
 app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
-app.config['SESSION_REDIS'] = redis.from_url('redis://localhost:6379')
+app.config['SESSION_REDIS'] = redis.from_url('redis://redis')
 
-Session(app)
+server_session = Session(app)
 socketIO = SocketIO(app, manage_session=False)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    """
+    Displays Index.html
+    """
     return render_template('index.html')
 
 
 @app.route('/chatroom', methods=['GET', 'POST'])
 def chatroom():
+    """
+    Main chatroom
+    """
     if request.method == "POST":
         username = request.form['username']
         room = request.form['roomName']
@@ -32,27 +40,41 @@ def chatroom():
         session['username'] = username
         session['room'] = room
         return render_template('chat.html', session=session)
-    else:
-        if session.get('username') is not None:
-            return render_template('chat.html', session=session)
-        return redirect(url_for('index'))
+
+    if session.get('username') is not None:
+        return render_template('chat.html', session=session)
+
+    return redirect(url_for('index'))
 
 
 @socketIO.on('join', namespace='/chatroom')
-def join(message):
+def join():
+    """
+    Displays text when a user joins a room
+    """
     room = session.get('room')
     join_room(room)
-    emit('status', {'msg': "%s has entered the room." % (session.get('username'))}, room=room)
+    emit('status',
+         {'msg': "%s has entered the room." % (session.get('username'))},
+         room=room)
 
 
 @socketIO.on('message', namespace='/chatroom')
 def text(message):
+    """
+    Displays text when a user sends a message
+    """
     room = session.get('room')
-    emit('message', {'msg': "%s : %s" % (session.get('username'), message['msg'])}, room=room)
+    emit('message',
+         {'msg': "%s : %s" % (session.get('username'), message['msg'])},
+         room=room)
 
 
 @socketIO.on('left', namespace='/chatroom')
-def left(message):
+def left():
+    """
+    Displays text when a user leaves a room
+    """
     room = session.get('room')
     username = session.get('username')
     leave_room(room)
