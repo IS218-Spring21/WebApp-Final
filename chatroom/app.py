@@ -37,13 +37,13 @@ def chatroom():
 def join(message):
     room = session.get('room')
     join_room(room)
-    emit('status', {'msg': "%s has entered the room.".format(session.get('username'))}, room=room)
+    emit('status', {'msg': "%s has entered the room." % (session.get('username'))}, room=room)
 
 
-@socketIO.on('text', namespace='/chatroom')
+@socketIO.on('message', namespace='/chatroom')
 def text(message):
     room = session.get('room')
-    emit('message', {'msg': "%s : %s".format(session.get('username'), message['msg'])}, room=room)
+    emit('message', {'msg': "%s : %s" % (session.get('username'), message['msg'])}, room=room)
 
 
 @socketIO.on('left', namespace='/chatroom')
@@ -52,7 +52,7 @@ def left(message):
     username = session.get('username')
     leave_room(room)
     session.clear()
-    emit('status', {'msg': "%s has left the room.".format(username)}, room=room)
+    emit('status', {'msg': "%s has left the room." % username}, room=room)
 
 
 if __name__ == '__main__':
