@@ -1,13 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from flask_session import Session
+import redis
+from datetime import timedelta
 
 # https://www.youtube.com/watch?v=q42zgGaYYzE
 
 app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'secret'
-app.config['SESSION_TYPE'] = 'filesystem'  # TODO: Change this to redis
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_REDIS'] = redis.from_url('redis://localhost:6379')
 
 Session(app)
 socketIO = SocketIO(app, manage_session=False)
