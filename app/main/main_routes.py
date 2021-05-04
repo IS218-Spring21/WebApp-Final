@@ -4,7 +4,7 @@
 import json
 
 # Third-party libraries
-from flask import redirect, request, url_for
+from flask import redirect, request, url_for, render_template, Response
 from flask_login import (
     current_user,
     login_required,
@@ -15,6 +15,7 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests
 
 # Internal imports
+from .db import get_db
 from .user import User
 
 from flask import Blueprint
@@ -136,3 +137,16 @@ def callback():
 def logout():
     logout_user()
     return redirect(url_for("main_page.index"))
+
+
+@main_page.route("/api/users")
+def api_browse() -> str:
+    data = []
+    a = get_db().cursor()
+    a.execute('SELECT * FROM user')
+    result = a.fetchall()
+    for row in result:
+        data.append(list(row))
+    json_result = json.dumps(data)
+    resp = Response(json_result, status=200, mimetype="application/json")
+    return resp
