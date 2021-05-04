@@ -2,12 +2,10 @@
 
 # Python standard libraries
 import json
-import os
 
 # Third-party libraries
-from flask import Flask, redirect, request, url_for
+from flask import redirect, request, url_for
 from flask_login import (
-    LoginManager,
     current_user,
     login_required,
     login_user,
@@ -18,10 +16,10 @@ import requests
 
 # Internal imports
 # from app.login.db import init_db_command
-from ..login.user import User
-# from ...app.app import app
+from app.user import User
+# from app import app
 
-from flask import Blueprint, render_template
+from flask import Blueprint
 
 main_page = Blueprint(
     'main_page',
@@ -31,11 +29,14 @@ main_page = Blueprint(
 )
 
 # Configuration
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
-GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
-GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
-
-# os.environ.get('GOOGLE_DISCOVERY_URL', None)
+GOOGLE_CLIENT_ID = '328754940117-blnf0979a5plol9qphredrdntpgmrsp9.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET = 'HpeG2-6H1vj3NSTsnvYv0jdj'
+# GOOGLE_CLIENT_ID = os.environ['GOOGLE_CLIENT_ID']                     # DONT WORK
+# GOOGLE_CLIENT_SECRET = os.environ['GOOGLE_CLIENT_SECRET']             # DONT WORK
+# ----------------------------
+# GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)           # DONT WORK
+# GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)   # DONT WORK
+GOOGLE_DISCOVERY_URL = 'https://accounts.google.com/.well-known/openid-configuration'
 
 # OAuth 2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
@@ -129,11 +130,11 @@ def callback():
     login_user(user)
 
     # Send user back to homepage
-    return redirect(url_for("index"))
+    return redirect(url_for("main_page.index"))
 
 
 @main_page.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for("main_page.index"))
