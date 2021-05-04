@@ -1,3 +1,6 @@
+"""
+PUT DOCSTRING HERE
+"""
 # Python standard libraries
 import os
 import sqlite3
@@ -24,6 +27,9 @@ login_manager.init_app(app)
 
 @login_manager.unauthorized_handler
 def unauthorized():
+    """
+    Sends unauthorized to client
+    """
     return "You must be logged in to access this content.", 403
 
 
@@ -38,6 +44,9 @@ except sqlite3.OperationalError:
 # Flask-Login helper to retrieve a user from our db
 @login_manager.user_loader
 def load_user(user_id):
+    """
+    Returns user_id to back-end
+    """
     return User.get(user_id)
 
 
