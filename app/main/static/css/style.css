@@ -1,0 +1,23 @@
+/* index.jinja2 stylesheet */
+.block0 .jumbotron {
+    float: none;
+    background: #1E6989;
+    color: white;
+    margin-bottom: 0px;
+}
+
+.block0 .jumbo-content {
+    margin: auto;
+    width: 960px;
+}
+
+.block0 .left {
+    width: 576px;
+    float: left;
+    text-align: -webkit-left;
+}
+.block0 .right {
+    float: none;
+    margin: auto;
+    text-align: -webkit-center;
+}

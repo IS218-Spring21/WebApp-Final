@@ -1,6 +1,6 @@
 FROM python:3.8
 
-EXPOSE 5000
+EXPOSE 443
 
 WORKDIR /app
 
