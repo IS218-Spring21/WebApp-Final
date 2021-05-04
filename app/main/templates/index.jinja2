@@ -1,22 +1,43 @@
 {% extends "layout.jinja2" %}
 
 {% block pagestyles %}
-  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='/css/style.css') }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block content %}
     <div class="container">
 
         {% if is_auth %}
+            <div class="block0">
+                <div class="jumbotron">
+                    <div class="jumbo-content">
+                        <div class="left">
+                            <h1 class="display-4">
+                                Hi, {{ cur_name }}!
+                            </h1>
+                            <h1 class="display-4">
+                                You're logged in!
+                            </h1>
+                            <h1 class="display-4">
+                                Email: {{ cur_email }}
+                            </h1>
+                        </div>
+
+                        <div class="right">
+                            <img style="border-radius: 20px;" src="{{ cur_pic }}"
+                                 alt="Google Profile Pic">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- all together incase its needed later
             <h1>Hi, {{ cur_name }}! You're logged in! Email: {{ cur_email }}</h1>
             <div>
                 <p>Google Profile Pic</p>
                 <img src="{{ cur_pic }}" alt="Google profile pic">
             </div>
-            <ul class="page-properties">
-                <li>hi</li>
-                <li><a class="button" href="/logout">Logout</a></li>
-            </ul>
+            -->
+
         {% else %}
             <h1>Hi, you are currently not logged in!</h1>
             <a class="button" href="/login">Google Login</a>
