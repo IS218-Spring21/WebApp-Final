@@ -43,17 +43,16 @@ client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 @main_page.route("/")
 def index():
-    if current_user.is_authenticated:
-        return (
-            "<p>Hello, {}! You're logged in! Email: {}</p>"
-            "<div><p>Google Profile Picture:</p>"
-            '<img src="{}" alt="Google profile pic"></img></div>'
-            '<a class="button" href="/logout">Logout</a>'.format(
-                current_user.name, current_user.email, current_user.profile_pic
-            )
-        )
+    is_auth = current_user.is_authenticated
+    if is_auth:
+        cur_name = current_user.name
+        cur_email = current_user.email
+        cur_pic = current_user.profile_pic
+        return render_template("index.jinja2", is_auth=is_auth,
+                               cur_name=cur_name, cur_email=cur_email,
+                               cur_pic=cur_pic)
     else:
-        return '<a class="button" href="/login">Google Login</a>'
+        return render_template("index.jinja2", is_auth=is_auth)
 
 
 def get_google_provider_cfg():
