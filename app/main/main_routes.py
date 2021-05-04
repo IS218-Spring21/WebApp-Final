@@ -16,7 +16,7 @@ import requests
 
 # Internal imports
 # from app.login.db import init_db_command
-from app.user import User
+from .user import User
 # from app import app
 
 from flask import Blueprint
