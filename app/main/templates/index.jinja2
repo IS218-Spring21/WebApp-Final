@@ -1,20 +1,20 @@
 {% extends "layout.jinja2" %}
 
 {% block content %}
-<div class="container">
-    {% if is_auth %}
+    <div class="container">
 
-    <h1>Hi, {{ cur_name }}! You're logged in! Email: {{ cur_email }}</h1>
-    <div>
-        <p>Google Profile Pic</p>
-        <img src="{{ cur_pic }}" alt="Google profile pic">
+        {% if is_auth %}
+            <h1>Hi, {{ cur_name }}! You're logged in! Email: {{ cur_email }}</h1>
+            <div>
+                <p>Google Profile Pic</p>
+                <img src="{{ cur_pic }}" alt="Google profile pic">
+            </div>
+            <ul class="page-properties">
+                <li>hi</li>
+                <li><a class="button" href="/logout">Logout</a></li>
+            </ul>
+        {% else %}
+            <a class="button" href="/login">Google Login</a>
+        {% endif %}
     </div>
-    <ul class="page-properties">
-        <li>hi</li>
-        <li><a class="button" href="/logout">Logout</a></li>
-    </ul>
-    {% else %}
-    <a class="button" href="/login">Google Login</a>
-    {% endif %}
-</div>
 {% endblock %}
