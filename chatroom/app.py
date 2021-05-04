@@ -1,72 +1,35 @@
-"""
-Chatroom Application
-"""
-import datetime
-import redis
-from flask import (
-    Flask,
-    Response,
-    redirect,
-    render_template,
-    request,
-    session,
-)
+from flask import Flask, render_template, request, redirect, url_for, session
+from flask_socketio import SocketIO, join_room, leave_room, emit
+from flask_session import Session
+
+# https://www.youtube.com/watch?v=q42zgGaYYzE
 
 app = Flask(__name__)
-app.secret_key = 'asdf'
-r = redis.StrictRedis('redis', 6379, 0, charset='utf-8', decode_responses=True)
+app.debug = True
+app.config['SECRET_KEY'] = 'secret'
+app.config['SESSION_TYPE'] = 'filesystem'  # TODO: Change this to redis
 
-def event_stream():
-    """
-    Handles Messages being sent into redis
-    """
-    pubsub = r.pubsub(ignore_subscribe_messages=True)
-    pubsub.subscribe('chat')
-    # TODO: handle client disconnection.
-    for message in pubsub.listen():
-        yield 'data: %s\n\n' % message['data']
+Session(app)
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    """
-    Handles User login
-    """
-    if request.method == 'POST':
-        session['user'] = request.form['user']
-        return redirect('/')
-    return render_template('login.html')
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    return render_template('index.html')
 
 
-@app.route('/post', methods=['POST'])
-def post():
-    """
-    Posts user's messages
-    """
-    message = request.form['message']
-    user = session.get('user', 'anonymous')
-    now = datetime.datetime.now().replace(microsecond=0).time()
-    r.publish('chat', '[%s] %s: %s' % (now.isoformat(), user, message))
-    return Response(status=204)
-
-
-@app.route('/stream')
-def stream():
-    """
-    Handles streaming the messages into the chatroom
-    """
-    return Response(event_stream(), mimetype="text/event-stream")
-
-
-@app.route('/')
-def home():
-    """
-    Displays the chatroom. If user isn't logged in it
-    will redirect them to the login page
-    """
-    if 'user' not in session:
-        return redirect('/login')
-    return render_template('chat.html', user=session['user'])
+@app.route('/chatroom', methods=['GET', 'POST'])
+def chatroom():
+    if request.method == "POST":
+        username = request.form['username']
+        room = request.form['roomName']
+        # Store the data in session
+        session['username'] = username
+        session['room'] = room
+        return render_template('chat.html', session=session)
+    else:
+        if session.get('username') is not None:
+            return render_template('chat.html', session=session)
+        return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
