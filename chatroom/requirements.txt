@@ -1,7 +1,0 @@
-flask
-flask-socketio
-flask-session
-eventlet
-redis
-pylint
-pylint-flask
