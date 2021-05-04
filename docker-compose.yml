@@ -4,4 +4,4 @@ services:
     build: ./app
     container_name: "Final-WebApp"
     ports:
-      - "5000:5000"
+      - "443:443"
