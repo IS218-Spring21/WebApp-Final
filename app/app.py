@@ -9,8 +9,8 @@ from flask_login import (
 )
 
 # Internal imports
-from db import init_db_command
-from user import User
+from main.db import init_db_command
+from main.user import User
 '''
 # Configuration
 GOOGLE_CLIENT_ID = '328754940117-blnf0979a5plol9qphredrdntpgmrsp9.apps.googleusercontent.com'
