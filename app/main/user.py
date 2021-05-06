@@ -26,7 +26,7 @@ class User(UserMixin):
         """
         user_db = get_db()
         user = user_db.execute(
-            "SELECT * FROM user WHERE id = ?", user_id).fetchone()
+            "SELECT * FROM user WHERE id = ?", (user_id,)).fetchone()
         if not user:
             return None
 
