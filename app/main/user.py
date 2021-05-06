@@ -10,8 +10,9 @@ class User(UserMixin):
     """
     User class
     """
+
     def __init__(self, id_, name, email, profile_pic):
-        self.id = id_
+        self.usr_id = id_  # changed from id = id_
         self.name = name
         self.email = email
         self.profile_pic = profile_pic
@@ -23,8 +24,8 @@ class User(UserMixin):
         :param user_id: user unique id
         :return: user from the database
         """
-        db = get_db()
-        user = db.execute(
+        user_db = get_db()
+        user = user_db.execute(
             "SELECT * FROM user WHERE id = ?", (user_id,)
         ).fetchone()
         if not user:
@@ -45,10 +46,10 @@ class User(UserMixin):
         :param profile_pic: user pic
         :return: creates a user
         """
-        db = get_db()
-        db.execute(
+        user_db = get_db()
+        user_db.execute(
             "INSERT INTO user (id, name, email, profile_pic)"
             " VALUES (?, ?, ?, ?)",
             (id_, name, email, profile_pic),
         )
-        db.commit()
+        user_db.commit()
