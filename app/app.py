@@ -12,8 +12,9 @@ from flask_login import (
 )
 
 # Internal imports
-from main.db import init_db_command
-from main.user import User
+from app.main.user import User
+from app.main.db import init_db_command
+
 
 # Flask app setup
 app = Flask(__name__)
