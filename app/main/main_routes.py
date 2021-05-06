@@ -2,9 +2,11 @@
 
 # Python standard libraries
 import json
+import os
 
 # Third-party libraries
-from flask import redirect, request, url_for, render_template, Response, Blueprint
+from flask import redirect, request, url_for, render_template, Response
+from flask import Blueprint
 from flask_login import (
     current_user,
     login_required,
@@ -26,14 +28,9 @@ main_page = Blueprint(
 )
 
 # Configuration
-GOOGLE_CLIENT_ID = '328754940117-blnf0979a5plol9qphredrdntpgmrsp9.apps.googleusercontent.com'
-GOOGLE_CLIENT_SECRET = 'HpeG2-6H1vj3NSTsnvYv0jdj'
-# GOOGLE_CLIENT_ID = os.environ['GOOGLE_CLIENT_ID']                     # DONT WORK
-# GOOGLE_CLIENT_SECRET = os.environ['GOOGLE_CLIENT_SECRET']             # DONT WORK
-# ----------------------------
-# GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)           # DONT WORK
-# GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)   # DONT WORK
-GOOGLE_DISCOVERY_URL = 'https://accounts.google.com/.well-known/openid-configuration'
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
+GOOGLE_DISCOVERY_URL = os.environ.get("GOOGLE_DISCOVERY_URL", None)
 
 # OAuth 2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
