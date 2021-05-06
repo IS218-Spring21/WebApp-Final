@@ -4,12 +4,15 @@ PUT DOCSTRING HERE
 # Python standard libraries
 import os
 import sqlite3
+import redis
 
 # Third party libraries
 from flask import Flask
 from flask_login import (
     LoginManager,
 )
+from flask_socketio import SocketIO
+from flask_session import Session
 
 # Internal imports
 from main.db import init_db_command
@@ -17,7 +20,14 @@ from main.user import User
 
 # Flask app setup
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY") or os.urandom(24)
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_REDIS'] = redis.from_url('redis://redis')
+
+server_session = Session(app)
+socketIO = SocketIO(app, manage_session=False)
 
 # User session management setup
 # https://flask-login.readthedocs.io/en/latest
@@ -55,5 +65,10 @@ with app.app_context():
 
     app.register_blueprint(main_routes.main_page)
 
+with app.app_context():
+    from chatroom import chatroom
+
+    app.register_blueprint(chatroom)
+
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=443, ssl_context="adhoc")
+    socketIO.run(app, debug=True, host='0.0.0.0', port=443, ssl_context="adhoc")
