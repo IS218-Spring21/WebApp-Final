@@ -23,16 +23,16 @@ def get_db():
     return g.db
 
 
-def close_db(ee=None):
+def close_db():
     """
     Closes the DB
-    :param ee: NONE
+    There was a param e=None
     :return: closes the DB
     """
-    db = g.pop("db", None)
+    db_ = g.pop("db", None)
 
-    if db is not None:
-        db.close()
+    if db_ is not None:
+        db_.close()
 
 
 def init_db():
@@ -40,10 +40,10 @@ def init_db():
     Initializes the DB
     :return: Initializes the DB
     """
-    db = get_db()
+    db_ = get_db()
 
-    with current_app.open_resource("usersDB.sql") as f:
-        db.executescript(f.read().decode("utf8"))
+    with current_app.open_resource("usersDB.sql") as sql_file:
+        db_.executescript(sql_file.read().decode("utf8"))
 
 
 @click.command("init-db")
