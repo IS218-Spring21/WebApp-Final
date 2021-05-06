@@ -43,6 +43,12 @@ client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 @main_page.route("/")
 def index():
+    """This method is the main page for our web app
+
+    If the user is logged in:
+    :return: this will return the main page with the logged in users, if not,
+    it will return the default logged out page.
+    """
     is_auth = current_user.is_authenticated
     if is_auth:
         cur_name = current_user.name
@@ -51,8 +57,7 @@ def index():
         return render_template("index.jinja2", is_auth=is_auth,
                                cur_name=cur_name, cur_email=cur_email,
                                cur_pic=cur_pic)
-    else:
-        return render_template("index.jinja2", is_auth=is_auth)
+    return render_template("index.jinja2", is_auth=is_auth)
 
 
 def get_google_provider_cfg():
