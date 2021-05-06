@@ -61,11 +61,19 @@ def index():
 
 
 def get_google_provider_cfg():
+    """
+    Gets google provider cfg
+    :return: google provider cfg
+    """
     return requests.get(GOOGLE_DISCOVERY_URL).json()
 
 
 @main_page.route("/login")
 def login():
+    """
+    Routes the user to google login page
+    :return: The user can login with their google account
+    """
     # Find out what URL to hit for Google login
     google_provider_cfg = get_google_provider_cfg()
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
@@ -82,6 +90,10 @@ def login():
 
 @main_page.route("/login/callback")
 def callback():
+    """
+
+    :return:
+    """
     # Get authorization code Google sent back to you
     code = request.args.get("code")
 
@@ -139,16 +151,24 @@ def callback():
 @main_page.route("/logout")
 @login_required
 def logout():
+    """
+
+    :return:
+    """
     logout_user()
     return redirect(url_for("main_page.index"))
 
 
 @main_page.route("/api/users")
 def api_browse() -> str:
+    """
+
+    :return:
+    """
     data = []
-    a = get_db().cursor()
-    a.execute('SELECT * FROM user')
-    result = a.fetchall()
+    users_db = get_db().cursor()
+    users_db.execute('SELECT * FROM user')
+    result = users_db.fetchall()
     for row in result:
         data.append(list(row))
     json_result = json.dumps(data)
