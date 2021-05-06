@@ -2,9 +2,11 @@
 
 # Python standard libraries
 import json
+# import os
 
 # Third-party libraries
 from flask import redirect, request, url_for, render_template, Response
+from flask import Blueprint
 from flask_login import (
     current_user,
     login_required,
@@ -18,8 +20,6 @@ import requests
 from .db import get_db
 from .user import User
 
-from flask import Blueprint
-
 main_page = Blueprint(
     'main_page',
     __name__,
@@ -28,14 +28,9 @@ main_page = Blueprint(
 )
 
 # Configuration
-GOOGLE_CLIENT_ID = '328754940117-blnf0979a5plol9qphredrdntpgmrsp9.apps.googleusercontent.com'
-GOOGLE_CLIENT_SECRET = 'HpeG2-6H1vj3NSTsnvYv0jdj'
-# GOOGLE_CLIENT_ID = os.environ['GOOGLE_CLIENT_ID']                     # DONT WORK
-# GOOGLE_CLIENT_SECRET = os.environ['GOOGLE_CLIENT_SECRET']             # DONT WORK
-# ----------------------------
-# GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)           # DONT WORK
-# GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)   # DONT WORK
-GOOGLE_DISCOVERY_URL = 'https://accounts.google.com/.well-known/openid-configuration'
+GOOGLE_CLIENT_ID = "328754940117-blnf0979a5plol9qphredrdntpgmrsp9.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET = "HpeG2-6H1vj3NSTsnvYv0jdj"
+GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
 # OAuth 2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
@@ -43,6 +38,12 @@ client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 @main_page.route("/")
 def index():
+    """This method is the main page for our web app
+
+    If the user is logged in:
+    :return: this will return the main page with the logged in users, if not,
+    it will return the default logged out page.
+    """
     is_auth = current_user.is_authenticated
     if is_auth:
         cur_name = current_user.name
@@ -51,16 +52,23 @@ def index():
         return render_template("index.jinja2", is_auth=is_auth,
                                cur_name=cur_name, cur_email=cur_email,
                                cur_pic=cur_pic)
-    else:
-        return render_template("index.jinja2", is_auth=is_auth)
+    return render_template("index.jinja2", is_auth=is_auth)
 
 
 def get_google_provider_cfg():
+    """
+    Gets google provider cfg
+    :return: google provider cfg
+    """
     return requests.get(GOOGLE_DISCOVERY_URL).json()
 
 
 @main_page.route("/login")
 def login():
+    """
+    Routes the user to google login page
+    :return: The user can login with their google account
+    """
     # Find out what URL to hit for Google login
     google_provider_cfg = get_google_provider_cfg()
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
@@ -77,6 +85,10 @@ def login():
 
 @main_page.route("/login/callback")
 def callback():
+    """
+
+    :return:
+    """
     # Get authorization code Google sent back to you
     code = request.args.get("code")
 
@@ -134,16 +146,24 @@ def callback():
 @main_page.route("/logout")
 @login_required
 def logout():
+    """
+
+    :return:
+    """
     logout_user()
     return redirect(url_for("main_page.index"))
 
 
 @main_page.route("/api/users")
 def api_browse() -> str:
+    """
+
+    :return:
+    """
     data = []
-    a = get_db().cursor()
-    a.execute('SELECT * FROM user')
-    result = a.fetchall()
+    users_db = get_db().cursor()
+    users_db.execute('SELECT * FROM user')
+    result = users_db.fetchall()
     for row in result:
         data.append(list(row))
     json_result = json.dumps(data)

@@ -15,8 +15,9 @@ from flask_socketio import SocketIO
 from flask_session import Session
 
 # Internal imports
-from main.db import init_db_command
 from main.user import User
+from main.db import init_db_command
+
 
 # Flask app setup
 app = Flask(__name__)
