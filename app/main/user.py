@@ -12,7 +12,7 @@ class User(UserMixin):
     """
 
     def __init__(self, id_, name, email, profile_pic):
-        self.usr_id = id_  # changed from id = id_
+        self.id = id_  # changed from id = id_
         self.name = name
         self.email = email
         self.profile_pic = profile_pic
@@ -26,8 +26,7 @@ class User(UserMixin):
         """
         user_db = get_db()
         user = user_db.execute(
-            "SELECT * FROM user WHERE id = ?", (user_id,)
-        ).fetchone()
+            "SELECT * FROM user WHERE id = ?", user_id).fetchone()
         if not user:
             return None
 
