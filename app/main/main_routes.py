@@ -4,7 +4,7 @@
 import json
 
 # Third-party libraries
-from flask import redirect, request, url_for, render_template, Response
+from flask import redirect, request, url_for, render_template, Response, Blueprint
 from flask_login import (
     current_user,
     login_required,
@@ -17,8 +17,6 @@ import requests
 # Internal imports
 from .db import get_db
 from .user import User
-
-from flask import Blueprint
 
 main_page = Blueprint(
     'main_page',
