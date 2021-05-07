@@ -3,9 +3,7 @@ PUT DOCSTRING HERE
 """
 # Python standard libraries
 import os
-import sqlite3
 import redis
-# import eventlet
 
 # Third party libraries
 from flask import Flask
@@ -16,8 +14,6 @@ from flask_session import Session
 from flask_socketio import SocketIO
 
 # Internal imports
-from main.user import User
-from main.db import init_db_command
 
 
 # Flask app setup
@@ -45,13 +41,15 @@ def unauthorized():
     return "You must be logged in to access this content.", 403
 
 
-# Naive database setup
-try:
-    init_db_command()
-except sqlite3.OperationalError:
-    # Assume it's already been created
-    pass
+with app.app_context():
+    from app.main import main_routes # change to auth0 package
+    from app.chatroom import chatroom
+    from app.database import database_blueprint
+    from app.database.user import User
 
+    app.register_blueprint(main_routes.main_page) #change to auth0 package
+    app.register_blueprint(chatroom)
+    app.register_blueprint(database_blueprint)
 
 # Flask-Login helper to retrieve a user from our db
 @login_manager.user_loader
@@ -62,16 +60,8 @@ def load_user(user_id):
     return User.get(user_id)
 
 
-with app.app_context():
-    from app.main import main_routes
-    from app.chatroom import chatroom
-
-    app.register_blueprint(main_routes.main_page)
-    app.register_blueprint(chatroom)
-
-
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=443, ssl_context="adhoc")
+    # app.run(debug=True, host='0.0.0.0', port=443, ssl_context="adhoc")
     socketIO.init_app(app, manage_session=False)
-    socketIO.run(app)
+    socketIO.run(app, debug=True, host='0.0.0.0', port=443, ssl_context="adhoc")
     # eventlet.wrap_ssl(socketIO.run(app, debug=True, host='0.0.0.0', port=443, ssl_context="adhoc"))

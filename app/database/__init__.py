@@ -1,12 +1,19 @@
+"""
+Is used to make model for database
+"""
 from flask import current_app, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 
 database_blueprint = Blueprint('database', __name__)
-current_app.config['SQLALCHEMY_DATABASE_URI'] = 'jdbc:postgresql://localhost:5432/root'
+current_app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://root:password@localhost:5432/root'
 database = SQLAlchemy(current_app)
+database.create_all()
 
 
-class User(database.Model):
+class UserModel(database.Model):
+    """
+    UserModel for database
+    """
     user_id = database.Column(database.String(255), primary_key=True)
     user_name = database.Column(database.String(255), nullable=False)
     user_email = database.Column(database.String(255), unique=True, nullable=False)
@@ -14,3 +21,10 @@ class User(database.Model):
 
     def __repr__(self):
         return '<User %r' % self.user_name
+
+
+def get_database():
+    """
+    returns all the database information
+    """
+    return UserModel.query().all()
