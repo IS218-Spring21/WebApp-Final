@@ -3,12 +3,9 @@
 {% block content %}
     <div class="container d-flex flex-column justify-content-center align-items-center vh-100">
         <h1 class="display-4">IS218 Chatroom</h1>
-        <form class="container" action="{{ url_for('chatroom.chatroom_index') }}" method="post">
+        <h4>{{ curr_name }}</h4>
+        <form class="container" action="{{ url_for('chatroom.chatroom_main') }}" method="post">
             <div class="border border-dark rounded bg-light p-5 d-flex flex-column">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
-                </div>
                 <div class="form-group">
                     <label for="roomName">Room Name:</label>
                     <input type="text" id="roomName" name="roomName" class="form-control" placeholder="Room Name" required>

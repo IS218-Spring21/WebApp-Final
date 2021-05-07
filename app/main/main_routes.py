@@ -5,7 +5,7 @@ import json
 # import os
 
 # Third-party libraries
-from flask import redirect, request, url_for, render_template, Response, session
+from flask import redirect, request, url_for, render_template, Response
 from flask import Blueprint
 from flask_login import (
     current_user,
@@ -44,15 +44,15 @@ def index():
     :return: this will return the main page with the logged in users, if not,
     it will return the default logged out page.
     """
-    session['is_auth'] = current_user.is_authenticated
-    if session.get('is_auth'):
+    is_auth = current_user.is_authenticated
+    if is_auth:
         cur_name = current_user.name
         cur_email = current_user.email
         cur_pic = current_user.profile_pic
-        return render_template("index.jinja2", is_auth=session.get('is_auth'),
+        return render_template("index.jinja2", is_auth=is_auth,
                                cur_name=cur_name, cur_email=cur_email,
                                cur_pic=cur_pic)
-    return render_template("index.jinja2", is_auth=session.get('is_auth'))
+    return render_template("index.jinja2", is_auth=is_auth)
 
 
 def get_google_provider_cfg():
