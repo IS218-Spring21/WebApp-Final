@@ -17,8 +17,8 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests
 
 # Internal imports
-from .db import get_db
-from .user import User
+from app.database import database, UserModel, get_database
+from app.database.user import User
 
 main_page = Blueprint(
     'main_page',
@@ -129,12 +129,13 @@ def callback():
     # Create a user in your db with the information provided
     # by Google
     user = User(
-        id_=unique_id, name=users_name, email=users_email, profile_pic=picture
+        user_id=unique_id, user_name=users_name, user_email=users_email, user_profile_pic=picture
     )
 
     # Doesn't exist? Add it to the database.
-    if not User.get(unique_id):
-        User.create(unique_id, users_name, users_email, picture)
+    if UserModel.query.filter_by(user_id=unique_id).first() is not None:
+        UserModel.session.add(user)
+        UserModel.session.commit()
 
     # Begin user session by logging the user in
     login_user(user)
@@ -161,9 +162,7 @@ def api_browse() -> str:
     :return:
     """
     data = []
-    users_db = get_db().cursor()
-    users_db.execute('SELECT * FROM user')
-    result = users_db.fetchall()
+    result = get_database()
     for row in result:
         data.append(list(row))
     json_result = json.dumps(data)
