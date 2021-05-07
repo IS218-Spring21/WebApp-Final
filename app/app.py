@@ -5,6 +5,7 @@ PUT DOCSTRING HERE
 import os
 import sqlite3
 import redis
+import eventlet
 
 # Third party libraries
 from flask import Flask
@@ -73,4 +74,4 @@ with app.app_context():
 
 if __name__ == "__main__":
     socketIO.init_app(app, manage_session=False)
-    socketIO.run(app, debug=True, host='0.0.0.0', port=443)
+    eventlet.wrap_ssl(socketIO.run(app, debug=True, host='0.0.0.0', port=443, ssl_context='adhoc'))
