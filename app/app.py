@@ -5,7 +5,7 @@ PUT DOCSTRING HERE
 import os
 import sqlite3
 import redis
-import eventlet
+# import eventlet
 
 # Third party libraries
 from flask import Flask
@@ -64,14 +64,14 @@ def load_user(user_id):
 
 with app.app_context():
     from app.main import main_routes
+    from app.chatroom import chatroom
 
     app.register_blueprint(main_routes.main_page)
-
-with app.app_context():
-    from chatroom import chatroom
-
     app.register_blueprint(chatroom)
 
+
 if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=443, ssl_context="adhoc")
     socketIO.init_app(app, manage_session=False)
-    eventlet.wrap_ssl(socketIO.run(app, debug=True, host='0.0.0.0', port=443, ssl_context='adhoc'))
+    socketIO.run(app)
+    # eventlet.wrap_ssl(socketIO.run(app, debug=True, host='0.0.0.0', port=443, ssl_context="adhoc"))

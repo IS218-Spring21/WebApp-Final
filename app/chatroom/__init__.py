@@ -4,15 +4,20 @@ Main python file to pull other scripts into this one
 from flask import Blueprint, session, redirect, url_for, render_template, request
 from . import events
 
-chatroom = Blueprint('chatroom', __name__)
+chatroom = Blueprint('chatroom',
+                     __name__,
+                     template_folder='templates',
+                     static_folder='static')
 
 
-@chatroom.route('/chatroom/', methods=['GET', 'POST'])
+@chatroom.route('/chatroom', methods=['GET', 'POST'])
 def chatroom_index():
     """
     Displays Index.html
     """
+
     return render_template('index.html')
+
 
 
 @chatroom.route('/chatroom/main', methods=['GET', 'POST'])
@@ -31,4 +36,4 @@ def chatroom_main():
     if session.get('username') is not None:
         return render_template('chat.html', session=session)
 
-    return redirect(url_for('chatroom'))
+    return redirect(url_for('chatroom.chatroom_index'))
