@@ -11,8 +11,8 @@ from flask import Flask
 from flask_login import (
     LoginManager,
 )
-from flask_socketio import SocketIO
 from flask_session import Session
+from flask_socketio import SocketIO
 
 # Internal imports
 from main.user import User
@@ -28,7 +28,7 @@ app.config['SESSION_USE_SIGNER'] = True
 app.config['SESSION_REDIS'] = redis.from_url('redis://redis')
 
 server_session = Session(app)
-socketIO = SocketIO(app, manage_session=False)
+socketIO = SocketIO()
 
 # User session management setup
 # https://flask-login.readthedocs.io/en/latest
@@ -72,4 +72,5 @@ with app.app_context():
     app.register_blueprint(chatroom)
 
 if __name__ == "__main__":
-    socketIO.run(app, debug=True, host='0.0.0.0', port=443, ssl_context="adhoc")
+    socketIO.init_app(app, manage_session=False)
+    socketIO.run(app, debug=True, host='0.0.0.0', port=443)

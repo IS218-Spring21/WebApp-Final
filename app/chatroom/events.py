@@ -1,6 +1,9 @@
+"""
+Handles SocketIO requests
+"""
 from flask import session
 from flask_socketio import emit, join_room, leave_room
-from ..app import socketIO
+from app.app import socketIO
 
 
 @socketIO.on('join', namespace='/chatroom')
