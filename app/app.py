@@ -42,12 +42,12 @@ def unauthorized():
 
 
 with app.app_context():
-    import app.auth0
+    from app.auth0 import main_page
     from app.chatroom import chatroom
     from app.database import database_blueprint
     from app.database.user import User
 
-    app.register_blueprint(app.auth0.main_page) #change to auth0 package
+    app.register_blueprint(main_page) #change to auth0 package
     app.register_blueprint(chatroom)
     app.register_blueprint(database_blueprint)
 
