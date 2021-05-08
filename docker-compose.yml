@@ -5,9 +5,12 @@ services:
     container_name: "Final-WebApp"
     depends_on:
       - redis
+    links:
       - postgres
     ports:
       - '443:443'
+    networks:
+      - default
     entrypoint:
       - flask
       - run
@@ -18,13 +21,5 @@ services:
     image: redis:alpine
     ports:
       - '6379:6379'
-
-  postgres:
-    container_name: postgres
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: password
-    ports:
-      - '5432:5432'
+    networks:
+      - default

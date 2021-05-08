@@ -5,7 +5,7 @@ from flask import current_app, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 
 database_blueprint = Blueprint('database', __name__)
-current_app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://root:password@postgres:5432/root'
+current_app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://njpmnrxzhnwjpy:144bc3bd207debde9624ce611d1f265ebdac67f68fc5d89cf0f6b77547debba5@ec2-52-87-107-83.compute-1.amazonaws.com:5432/dd8pkj3btfpbud'
 database = SQLAlchemy(current_app)
 database.create_all()
 
