@@ -14,17 +14,26 @@ class UserModel(database.Model):
     """
     UserModel for database
     """
+    __tablename__ = 'Users'
+
     user_id = database.Column(database.String(255), primary_key=True)
     user_name = database.Column(database.String(255), nullable=False)
     user_email = database.Column(database.String(255), unique=True, nullable=False)
     user_profile_pic = database.Column(database.String(255), nullable=False)
 
+    def __init__(self, user_id, user_name, user_email, user_profile_pic):
+        self.user_id = user_id
+        self.user_name = user_name
+        self.user_email = user_email
+        self.user_profile_pic = user_profile_pic
+
+
     def __repr__(self):
-        return '<User %r' % self.user_name
+        return '<id {}>'.format(self.id)
 
 
 def get_database():
     """
     returns all the database information
     """
-    return UserModel.query().all()
+    return database.Query(UserModel).all()
