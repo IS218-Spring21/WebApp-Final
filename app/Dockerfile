@@ -10,8 +10,7 @@ RUN pip install  -r requirements.txt --upgrade pip
 COPY . /app
 
 RUN pylint --load-plugins pylint_flask app
-RUN pylint --load-plugins pylint_flask_sqlalchemy database
 RUN pylint --load-plugins pylint_flask chatroom
-RUN pylint --load-plugins pylint_flask auth0
+RUN pylint --load-plugins pylint_flask main
 
 CMD python app.py

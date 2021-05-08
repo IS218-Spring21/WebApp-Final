@@ -17,8 +17,8 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests
 
 # Internal imports
-from app.database import UserModel, get_database
-from app.database.user import User
+from .db import UserModel, get_database
+from .user import User
 
 main_page = Blueprint(
     'main_page',
@@ -133,7 +133,7 @@ def callback():
     )
 
     # Doesn't exist? Add it to the database.
-    if UserModel.query.filter_by(user_id=unique_id).first() is not None:
+    if UserModel.query.filter_by(user_id=unique_id).first() is None:
         UserModel.session.add(user)
         UserModel.session.commit()
 

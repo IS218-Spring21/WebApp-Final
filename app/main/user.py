@@ -3,7 +3,7 @@ File used to maintain rows of UserModel
 """
 from flask_login import UserMixin
 
-from . import UserModel
+from .db import UserModel
 
 
 class User(UserMixin):
