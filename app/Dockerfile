@@ -11,6 +11,6 @@ COPY . /app
 
 RUN pylint --load-plugins pylint_flask app
 RUN pylint --load-plugins pylint_flask chatroom
-RUN pylint --load-plugins pylint_flask main
+RUN pylint --load-plugins pylint_flask_sqlalchemy main
 
 CMD python app.py
