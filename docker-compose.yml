@@ -5,16 +5,10 @@ services:
     container_name: "Final-WebApp"
     depends_on:
       - redis
-    links:
-      - postgres
     ports:
       - '443:443'
     networks:
       - default
-    entrypoint:
-      - flask
-      - run
-      - --host='0.0.0.0'
 
   redis:
     container_name: redis

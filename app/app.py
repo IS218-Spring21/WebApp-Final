@@ -25,7 +25,7 @@ app.config['SESSION_USE_SIGNER'] = True
 app.config['SESSION_REDIS'] = redis.from_url('redis://redis')
 
 server_session = Session(app)
-socketIO = SocketIO()
+socketIO = SocketIO(app, manage_session=False)
 
 # User session management setup
 # https://flask-login.readthedocs.io/en/latest
@@ -42,14 +42,14 @@ def unauthorized():
 
 
 with app.app_context():
-    from app.auth0 import main_page
-    from app.chatroom import chatroom
-    from app.database import database_blueprint
-    from app.database.user import User
+    from chatroom import chatroom
+    from database import database_blueprint
+    from database.user import User
+    import auth0
 
-    app.register_blueprint(main_page) #change to auth0 package
     app.register_blueprint(chatroom)
     app.register_blueprint(database_blueprint)
+    app.register_blueprint(auth0.main_page)
 
 # Flask-Login helper to retrieve a user from our db
 @login_manager.user_loader
@@ -62,6 +62,5 @@ def load_user(user_id):
 
 if __name__ == "__main__":
     # app.run(debug=True, host='0.0.0.0', port=443, ssl_context="adhoc")
-    socketIO.init_app(app, manage_session=False)
-    socketIO.run(app, debug=True, host='0.0.0.0', port=443, ssl_context="adhoc")
+    socketIO.run(app, debug=True, port=443)
     # eventlet.wrap_ssl(socketIO.run(app, debug=True, host='0.0.0.0', port=443, ssl_context="adhoc"))

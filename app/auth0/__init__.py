@@ -17,7 +17,7 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests
 
 # Internal imports
-from app.database import database, UserModel, get_database
+from app.database import UserModel, get_database
 from app.database.user import User
 
 main_page = Blueprint(

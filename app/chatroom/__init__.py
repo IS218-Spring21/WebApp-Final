@@ -3,7 +3,6 @@ Main python file to pull other scripts into this one
 """
 from flask import Blueprint, session, redirect, url_for, render_template, request
 from flask_login import current_user
-from . import events
 
 chatroom = Blueprint('chatroom',
                      __name__,
