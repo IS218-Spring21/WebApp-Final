@@ -40,13 +40,13 @@ To load our web application please have a up-to-date version of docker. The requ
     #### - Make sure to run the DockerCompose file twice on Pycharm.
     #### - Once to build the database
     #### - And again to run the web app
-4. To access the Login Web App go to the follow link
-    #### <a href='https://localhost'>https://localhost </a>
-5. DONT CLICK ON THE DEFAULT LINK THAT ITS RUNNING ON
+4. DON'T CLICK ON THE DEFAULT LINK THAT IT'S RUNNING ON
     #### - Try the Links below for each service, respectively
     #### - If you get a connection is not private Warning then,
     #### - Click Advanced, then Proceed to localhost
-    #### - Don't worry its safe! 
+    #### - Don't worry its safe!    
+5. To access the Login Web App go to the follow link
+    #### <a href='https://localhost'>https://localhost </a>
 6. To access the Chatroom Web App go to the follow link
     #### <a href='http://localhost:5000'>http://localhost:5000 </a>
 
