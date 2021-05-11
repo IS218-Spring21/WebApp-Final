@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Chatroom</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css')}}">
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.bundle.js')}}"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

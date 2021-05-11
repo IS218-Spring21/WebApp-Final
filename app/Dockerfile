@@ -1,6 +1,6 @@
 FROM python:3.8
 
-EXPOSE 5000
+EXPOSE 443
 
 WORKDIR /app
 
@@ -10,5 +10,6 @@ RUN pip install  -r requirements.txt --upgrade pip
 COPY . /app
 
 RUN pylint --load-plugins pylint_flask app
+RUN pylint --load-plugins pylint_flask main
 
 CMD python app.py

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container d-flex flex-column justify-content-center align-items-center vh-100">
+        <h1 class="display-4">IS218 Chatroom</h1>
+        <h2>Room: {{ session['room'] }}</h2>
+        <textarea class="form-control" id="chat" rows="25" placeholder="No messages yet"></textarea>
+        <div class="form-group mt-3 w-100 d-inline-flex">
+            <input class="form-control" type="text" id="message" placeholder="Enter message here!">
+            <button type="button" id="send" class="btn btn-success w-25">Send Message</button>
+        </div>
+        <div class="mt-3">
+            <button type="button" id="leave" class="btn btn-danger" onclick=leave_room()>Leave chatroom</button>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename="js/socket.io.js") }}"></script>
+    <script type="text/javascript" charset="utf-8">
+        let socket;
+        $(document).ready(function (){
+            socket = io.connect('http://'+document.domain+":"+location.port+'/chatroom');
+            socket.on('connect', function (){
+                socket.emit('join');
+            });
+            {# Sends message when user joins #}
+            socket.on('status', function (data){
+                $("#chat").val($("#chat").val() + "<"+data.msg+">\n");
+                $("#chat").scrollTop($("#chat")[0].scrollHeight);
+            });
+            {# sends user's message to the chat #}
+            socket.on('message', function (data){
+                $("#chat").val($("#chat").val() + data.msg + '\n');
+                $("#chat").scrollTop($("#chat")[0].scrollHeight);
+            });
+            $("#send").click(function (e){
+                if($("#message").val()!=""){
+                    message = $("#message").val();
+                    $("#message").val('');
+                    socket.emit('message', {msg: message});
+                }
+            });
+        });
+        function leave_room(){
+                socket.emit('left', function (){
+                    socket.disconnect();
+                    window.location.href = "{{ url_for('index') }}";
+                });
+            }
+    </script>
+{% endblock %}
